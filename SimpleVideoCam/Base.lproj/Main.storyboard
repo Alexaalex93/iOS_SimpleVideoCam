@@ -37,10 +37,20 @@
                     </view>
                     <connections>
                         <outlet property="cameraButton" destination="rZM-E1-c6K" id="LPW-J2-SuD"/>
+                        <segue destination="mn5-0s-LEe" kind="presentation" identifier="playVideo" id="amd-I2-v0D"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="-414" y="140"/>
+        </scene>
+        <!--AV Player View Controller-->
+        <scene sceneID="Jhg-YR-8rL">
+            <objects>
+                <avPlayerViewController videoGravity="AVLayerVideoGravityResizeAspect" id="mn5-0s-LEe" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="T05-hd-Qot" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="646" y="140"/>
         </scene>
     </scenes>
     <resources>

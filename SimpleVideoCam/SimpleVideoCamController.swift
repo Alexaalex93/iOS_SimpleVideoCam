@@ -7,8 +7,9 @@
 //
 import UIKit
 import AVFoundation
+import AVKit
 
-class SimpleVideoCamController: UIViewController {
+class SimpleVideoCamController: UIViewController, AVCaptureFileOutputRecordingDelegate {
 
     @IBOutlet var cameraButton:UIButton!
     
@@ -64,9 +65,46 @@ class SimpleVideoCamController: UIViewController {
         if !isRecording {
             isRecording = true
             UIView.animate(withDuration: 0.5, delay: 0.0, options: [.repeat, .autoreverse, .allowUserInteraction], animations: { self.cameraButton.transform = CGAffineTransform(scaleX: 0.5, y: 0.5) }, completion: nil)
+            
+            let outputPath = NSTemporaryDirectory() + "output.mov"
+            let outputFileURL = URL(fileURLWithPath: outputPath)
+            videoFIleOutput?.startRecording(toOutputFileURL: outputFileURL, recordingDelegate: self)//Empezamos a grabar en esta direccion con este delegado
+        } else {
+        
+            isRecording = false
+            /*UIView.animate(withDuration: 0.5, delay: 1.0, options: [], animations: {
+                self.cameraButton.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+                }, completion: nil)
+            cameraButton.layer.removeAllAnimations()
+*/
+            UIView.animateKeyframes(withDuration: 0.5, delay: 0, options: [], animations: {
+                 self.cameraButton.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+                }, completion: { (completed) in
+                    self.cameraButton.layer.removeAllAnimations()
+            })
+            videoFIleOutput?.stopRecording()
+        
         }
+    }
+    
 
-
+    
+    func capture(_ captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAt outputFileURL: URL!, fromConnections connections: [Any]!, error: Error!) {
+        if error != nil {
+            print(error)
+            return
+        }
+        performSegue(withIdentifier: "playVideo", sender: outputFileURL)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "playVideo" {
+        
+            let videoPlayerViewController = segue.destination as! AVPlayerViewController
+            let videoFileURL = sender as! NSURL
+            videoPlayerViewController.player = AVPlayer(url: videoFileURL as URL)
+            
+        }
     }
 }
 
